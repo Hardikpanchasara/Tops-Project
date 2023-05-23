@@ -24,6 +24,7 @@ const HeaderCompo = () => {
             "/": "Home",
             "/about": "About",
             "/contact": "Contact",
+            "/login": "Login/Register",
         }
     
 
