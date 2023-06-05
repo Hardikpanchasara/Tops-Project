@@ -57,7 +57,7 @@ const HeaderCompo = () => {
     })
 
     const Dropdowndata = Dropdown.map((item, i) => {
-        console.log(item)
+        // console.log(item)
         return <MDBDropdownItem key={i} ><NavLink className="nav-link" aria-current="page" to={`courses${Object.keys(item)}`}> {Object.values(item)}</NavLink>
         </MDBDropdownItem>
     })

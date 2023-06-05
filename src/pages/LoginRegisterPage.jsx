@@ -1,10 +1,44 @@
 import React, { useRef, useState } from 'react'
 import { NavLink } from 'react-router-dom'
-// import "../LoginRegister.css"
 import styled from 'styled-components'
 
 const LoginRegisterPage = () => {
     const [rightPanel, setRightPanel] = useState(false)
+    const [loginData , SetLoginData] = useState({
+      email : "" ,
+      password : "" ,
+    })
+    const [RegisterData , SetRegisterData] = useState({
+      username : "",
+      email : "" ,
+      password : "" ,
+
+    })
+    let LoginFormDataHandle = (event) => {
+      SetLoginData((prev) => {
+        return {
+            ...prev,
+             [event.target.name]: event.target.value ,
+        }
+      })
+    }
+    let RegisterFormDataHandle = (event) => {
+      SetRegisterData((prev) => {
+        return {
+            ...prev,
+             [event.target.name]: event.target.value ,
+        }
+      })
+    }
+
+    const LoginSubmit = (event) => {
+      event.preventDefault()
+      console.log(loginData)
+    }
+    const RegisterSubmit = (event) => {
+      event.preventDefault()
+      console.log(RegisterData)
+    }
     const SetRightPanel = () => {
         setRightPanel(true)
     }
@@ -26,7 +60,7 @@ const LoginRegisterPage = () => {
                 {/* <div className="container" id="container" ref={panelRef}> */}
                     {/* sign Up form section start*/}
                     <div className="form sign_up">
-                        <form action="#">
+                        <form onSubmit={RegisterSubmit}>
                             {/* heading */}
                             <h1>Create An Account</h1>
                             {/* social media icons */}
@@ -35,9 +69,9 @@ const LoginRegisterPage = () => {
                             </div>
                             <span>use email for registration</span>
                             {/* input fields start */}
-                            <input type="text" placeholder="User Name" />
-                            <input type="email" placeholder="Email" />
-                            <input type="password" placeholder="Password" />
+                            <input type="text" placeholder="User Name" name='username' onChange={RegisterFormDataHandle}  />
+                            <input type="email" placeholder="Email" name='email' onChange={RegisterFormDataHandle}  />
+                            <input type="password" placeholder="Password" name='password' onChange={RegisterFormDataHandle} />
                             <button>Create Account</button>
                             {/* input fields end */}
                         </form>
@@ -45,7 +79,7 @@ const LoginRegisterPage = () => {
                     {/* sign Up form section end*/}
                     {/* sign in form section start*/}
                     <div className="form sign_in">
-                        <form action="#">
+                        <form onSubmit={LoginSubmit}>
                             {/* heading */}
                             <h1>Login In</h1>
                             {/* social media icons */}
@@ -54,10 +88,10 @@ const LoginRegisterPage = () => {
                             </div>
                             <span>Login In with your Account</span>
                             {/* input fields start */}
-                            <input type="email" placeholder="Email" />
-                            <input type="password" placeholder="Password" />
+                            <input type="email" placeholder="Email" name='email' onChange={LoginFormDataHandle} value={loginData.email} />
+                            <input type="password" placeholder="Password" name='password' onChange={LoginFormDataHandle} value={loginData.password} />
                             <span>Forgot your <span className="forgot">password?</span></span>
-                            <button>Login</button>
+                            <button type='submit' >Login</button>
                             {/* input fields end */}
                         </form>
                     </div>
