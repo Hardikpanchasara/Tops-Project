@@ -1,21 +1,19 @@
 import React, { useRef, useState } from 'react'
-import { Link, NavLink } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
-import HandleChangeHook from '../CustomHooks/HandleChangeHook'
 
 const LoginRegisterPage = () => {
   const [rightPanel, setRightPanel] = useState(false)
-  const { handleChange, inp, error  } = HandleChangeHook()
   const [loginData, SetLoginData] = useState({
     email: "",
     password: "",
   })
-  // const [RegisterData, SetRegisterData] = useState({
-  //   username: "",
-  //   email: "",
-  //   password: "",
+  const [RegisterData, SetRegisterData] = useState({
+    username: "",
+    email: "",
+    password: "",
 
-  // })
+  })
   let LoginFormDataHandle = (event) => {
     SetLoginData((prev) => {
       return {
@@ -24,29 +22,22 @@ const LoginRegisterPage = () => {
       }
     })
   }
-  // let RegisterFormDataHandle = (event) => {
-  //   SetRegisterData((prev) => {
-  //     return {
-  //       ...prev,
-  //       [event.target.name]: event.target.value,
-  //     }
-  //   })
-  // }
+  let RegisterFormDataHandle = (event) => {
+    SetRegisterData((prev) => {
+      return {
+        ...prev,
+        [event.target.name]: event.target.value,
+      }
+    })
+  }
 
   const LoginSubmit = (event) => {
     event.preventDefault()
     console.log(loginData)
-    SetLoginData(() => {
-      return {
-        email: "",
-        password: "",
-      }
-    })
   }
   const RegisterSubmit = (event) => {
     event.preventDefault()
-    console.log(inp)
-    
+    console.log(RegisterData)
   }
   const SetRightPanel = () => {
     setRightPanel(true)
@@ -54,14 +45,19 @@ const LoginRegisterPage = () => {
   const SetLeftPanel = () => {
     setRightPanel(false)
   }
+  // const panelRef = useRef()
+  // const SetRightPanel = () => {
+  //     panelRef.current.className = "container right-panel-active"
+  // }
+  // const SetLeftPanel = () => {
+  //     panelRef.current.className = "container"
+  // }
 
   return (
     <>
       <Wrapper>
         <div className={`container ${rightPanel ? "right-panel-active" : ""}`} id="container">
-          <Link className='position-absolute z-index-up' to="/">
-            <i className='fa fa-home'></i>
-          </Link>
+          {/* <div className="container" id="container" ref={panelRef}> */}
           {/* sign Up form section start*/}
           <div className="form sign_up">
             <form onSubmit={RegisterSubmit}>
@@ -73,9 +69,9 @@ const LoginRegisterPage = () => {
               </div>
               <span>use email for registration</span>
               {/* input fields start */}
-              <input type="text" placeholder="User Name" name='username' onChange={handleChange} />
-              <input type="email" placeholder="Email" name='email' onChange={handleChange} />
-              <input type="password" placeholder="Password" name='password' onChange={handleChange} />
+              <input type="text" placeholder="User Name" name='username' onChange={RegisterFormDataHandle} value={RegisterData.username} />
+              <input type="email" placeholder="Email" name='email' onChange={RegisterFormDataHandle} value={RegisterData.email} />
+              <input type="password" placeholder="Password" name='password' onChange={RegisterFormDataHandle} value={RegisterData.password} />
               <button>Create Account</button>
               {/* input fields end */}
             </form>
@@ -130,10 +126,6 @@ const Wrapper = styled.div`
   place-items: center;
   font-family: "Nunito", sans-serif;
   height: 90vh;
-
-  .z-index-up {
-    z-index: 99;
-  }
 
 /* headings */
   h1 {
