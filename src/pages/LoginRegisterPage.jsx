@@ -2,20 +2,16 @@ import React, { useRef, useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 import HandleChangeHook from '../CustomHooks/HandleChangeHook'
+import axios from 'axios'
 
 const LoginRegisterPage = () => {
   const [rightPanel, setRightPanel] = useState(false)
-  const { handleChange, inp, error  } = HandleChangeHook()
+  const { handleChange, inp, errors  } = HandleChangeHook({} ,{})
   const [loginData, SetLoginData] = useState({
     email: "",
     password: "",
   })
-  // const [RegisterData, SetRegisterData] = useState({
-  //   username: "",
-  //   email: "",
-  //   password: "",
-
-  // })
+  
   let LoginFormDataHandle = (event) => {
     SetLoginData((prev) => {
       return {
@@ -24,28 +20,25 @@ const LoginRegisterPage = () => {
       }
     })
   }
-  // let RegisterFormDataHandle = (event) => {
-  //   SetRegisterData((prev) => {
-  //     return {
-  //       ...prev,
-  //       [event.target.name]: event.target.value,
-  //     }
-  //   })
-  // }
 
   const LoginSubmit = (event) => {
     event.preventDefault()
     console.log(loginData)
-    SetLoginData(() => {
-      return {
+    SetLoginData( {
         email: "",
         password: "",
-      }
-    })
+      })
   }
   const RegisterSubmit = (event) => {
     event.preventDefault()
     console.log(inp)
+    axios.post('http://localhost:5000/users', inp )
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
     
   }
   const SetRightPanel = () => {
@@ -73,9 +66,12 @@ const LoginRegisterPage = () => {
               </div>
               <span>use email for registration</span>
               {/* input fields start */}
-              <input type="text" placeholder="User Name" name='username' onChange={handleChange} />
-              <input type="email" placeholder="Email" name='email' onChange={handleChange} />
-              <input type="password" placeholder="Password" name='password' onChange={handleChange} />
+              <input className='required' type="text" placeholder="User Name" name='username' onChange={handleChange} />
+              {errors.usernameError ? <span>This field is Required</span>:<></> }
+              <input className='required' type="email" placeholder="Email" name='email' onChange={handleChange} />
+              {errors.emailError ? <span>This field is Required</span>:<></> }
+              <input className='required' type="password" placeholder="Password" name='password' onChange={handleChange} />
+              {errors.passwordError ? <span>This field is Required</span>:<></>}
               <button>Create Account</button>
               {/* input fields end */}
             </form>
