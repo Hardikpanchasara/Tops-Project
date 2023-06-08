@@ -5,6 +5,8 @@ import HomePage from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
 import LoginRegisterPage from "./pages/LoginRegisterPage";
+import React, { Suspense } from "react";
+const AdminRoutes = React.lazy(() => { return import("./Admin/AdminRoutes")})
 
 const MainRoutes = createBrowserRouter([
     {
@@ -37,7 +39,13 @@ const MainRoutes = createBrowserRouter([
     // {
     //     path: "/login",
     //     element: <LoginRegisterPage />,
-    // }
+    // },
+    {
+        path : "/admin*",
+        element : <Suspense fallback={ <h2>loading...</h2> }> <AdminRoutes/> </Suspense>
+
+    }
+
 ])
 
 export default MainRoutes

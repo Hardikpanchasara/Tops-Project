@@ -32,39 +32,81 @@
       "id": 2
     },
     {
-      "role": 1,
+      "role": 2,
       "username": "bhavya",
       "email": "bhavya@mail.com",
       "password": "123456789",
       "id": 3
     },
     {
-      "role": 1,
+      "role": 2,
       "username": "rushi",
       "email": "rushi@mail.com",
       "password": "123456789",
       "id": 4
     },
     {
-      "role": 1,
+      "role": 2,
       "username": "sachin",
       "email": "sachin@mail.com",
       "password": "123456789",
       "id": 5
     },
     {
-      "role": 1,
+      "role": 2,
       "username": "prachi",
       "email": "prachi@mail.com",
       "password": "123456789",
       "id": 6
     },
     {
-      "role": 1,
+      "role": 2,
       "username": "jiya",
       "email": "jiya@mail.com",
       "password": "123456789",
       "id": 7
+    },
+    {
+      "role": 2,
+      "username": "harsh",
+      "email": "harsh@mail.com",
+      "password": "123456789",
+      "id": 8
+    },
+    {
+      "role": 2,
+      "username": "manish",
+      "email": "manish@mail.com",
+      "password": "123456789",
+      "id": 9
+    },
+    {
+      "role": 2,
+      "username": "meet",
+      "email": "meet@mail.com",
+      "password": "123456789",
+      "id": 10
+    },
+    {
+      "role": 2,
+      "username": "savan",
+      "email": "savan@mail.com",
+      "password": "123456789",
+      "id": 11
+    },
+    {
+      "role": 2,
+      "username": "vishal",
+      "email": "vishal@mail.com",
+      "password": "123456789",
+      "id": 12
+    },
+    {
+      "role": 2,
+      "username": "rahul",
+      "email": "rahul@mail.com",
+      "password": "123456789",
+      "id": 13
     }
   ]
 }

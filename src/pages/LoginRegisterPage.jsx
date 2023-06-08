@@ -1,43 +1,61 @@
 import React, { useRef, useState } from 'react'
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import HandleChangeHook from '../CustomHooks/HandleChangeHook'
 import axios from 'axios'
+import { useCookies } from 'react-cookie'
 
 const LoginRegisterPage = () => {
   const [rightPanel, setRightPanel] = useState(false)
-  const { handleChange, inp, errors } = HandleChangeHook({"role" : 2}, {})
-  const [loginData, SetLoginData] = useState({
-    email: "",
-    password: "",
-  })
-
-  let LoginFormDataHandle = (event) => {
-    SetLoginData((prev) => {
-      return {
-        ...prev,
-        [event.target.name]: event.target.value,
-      }
-    })
-  }
+  const { handleChange, inp, errors } = HandleChangeHook({ "role": 2 }, {})
+  const navigate = useNavigate()
+  const [cookies , setCookies ] = useCookies()
 
   const LoginSubmit = (event) => {
     event.preventDefault()
-    console.log(loginData)
-    SetLoginData({
-      email: "",
-      password: "",
-    })
+    console.log(inp)
+    axios.get(`http://localhost:5000/users?email=${inp.email}&password=${inp.password}`)
+      .then(function (response) {
+        console.log("res = " , response);
+        if (response.status == 200) {
+          console.log("response status" , response.status )
+          if (response.data.length > 0) {
+            setCookies('username', response.data[0].username);
+            setCookies('userid', response.data[0].id);
+            if (response.data[0].role == 1) {
+              navigate("/admin")
+            } else {
+              navigate("/")
+            }
+          } else {
+            console.log("invalid user");
+            // setLoginMsg("invalid user")
+          }
+        } else {
+          console.log("error while connecting to the server", response.status);
+        }
+      })
+      .catch(function (error) {
+        console.log("err = " , error);
+      });
   }
+
+  
   const RegisterSubmit = (event) => {
     event.preventDefault()
     console.log(inp)
 
-    fetch('http://localhost:5000/users', {
+    fetch(`http://localhost:5000/users`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(inp),
-    }).then(response => response.json()).then(json => console.log(json));
+    })
+      .then(response => response.json())
+      .then(json =>
+        // console.log(json)
+        // navigate("/login")
+        setRightPanel(false)
+      );
 
 
     // axios.post('http://localhost:5000/users', inp)
@@ -96,8 +114,8 @@ const LoginRegisterPage = () => {
               </div>
               <span>Login In with your Account</span>
               {/* input fields start */}
-              <input type="email" placeholder="Email" name='email' onChange={LoginFormDataHandle} value={loginData.email} />
-              <input type="password" placeholder="Password" name='password' onChange={LoginFormDataHandle} value={loginData.password} />
+              <input type="email" placeholder="Email" name='email' onChange={handleChange} />
+              <input type="password" placeholder="Password" name='password' onChange={handleChange} />
               <span>Forgot your <span className="forgot">password?</span></span>
               <button type='submit' >Login</button>
               {/* input fields end */}
@@ -134,9 +152,10 @@ const Wrapper = styled.div`
   place-items: center;
   font-family: "Nunito", sans-serif;
   height: 90vh;
+  width: 100%;
 
   .z-index-up {
-    z-index: 99;
+    z-index: 999;
   }
 
 /* headings */
@@ -267,6 +286,9 @@ button:active {
   width: 650px;
   max-width: 100%;
   min-height: 550px;
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 }
 .form {
   position: absolute;

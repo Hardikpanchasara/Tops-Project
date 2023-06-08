@@ -15,13 +15,13 @@ const HandleChangeHook = (initval, initError) => {
         }))
 
         if (e.target.className == "required") {
-            console.log("called inside if", e.target.value);
+            // console.log("called inside if", e.target.value);
             if (e.target.value == "") {
                 let SpanId = [e.target.name] + "Error";
-                console.log("inside condition", SpanId);
+                // console.log("inside condition", SpanId);
                 setError({ ...errors, [SpanId]: "This field is required" })
             } else {
-                console.log("inside else condition");
+                // console.log("inside else condition");
                 setError({ ...errors, "usernameError": "" })
             }
         }
