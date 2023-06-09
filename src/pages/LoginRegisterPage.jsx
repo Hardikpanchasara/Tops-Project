@@ -24,6 +24,7 @@ const LoginRegisterPage = () => {
           if (response.data.length > 0) {
             setCookies('username', response.data[0].username);
             setCookies('userid', response.data[0].id);
+            setCookies('role', response.data[0].role);
             if (response.data[0].role == 1) {
               navigate("/admin")
             } else {
