@@ -9,38 +9,40 @@ const LoginRegisterPage = () => {
   const [rightPanel, setRightPanel] = useState(false)
   const { handleChange, inp, errors } = HandleChangeHook({ "role": 2 }, {})
   const navigate = useNavigate()
-  const [cookies , setCookies ] = useCookies()
+  const [cookies, setCookies] = useCookies()
+  const [loginMsg, setLoginMsg] = useState("")
+  console.log(cookies)
 
   const LoginSubmit = (event) => {
     event.preventDefault()
     console.log(inp)
     axios.get(`http://localhost:5000/users?email=${inp.email}&password=${inp.password}`)
       .then(function (response) {
-        console.log("res = " , response);
+        console.log("res = ", response);
         if (response.status == 200) {
-          console.log("response status" , response.status )
+          console.log("response status", response.status)
           if (response.data.length > 0) {
             setCookies('username', response.data[0].username);
             setCookies('userid', response.data[0].id);
             if (response.data[0].role == 1) {
               navigate("/admin")
             } else {
-              navigate("/")
+              // navigate("/")
             }
           } else {
             console.log("invalid user");
-            // setLoginMsg("invalid user")
+            setLoginMsg("invalid user")
           }
         } else {
           console.log("error while connecting to the server", response.status);
         }
       })
       .catch(function (error) {
-        console.log("err = " , error);
+        console.log("err = ", error);
       });
   }
 
-  
+
   const RegisterSubmit = (event) => {
     event.preventDefault()
     console.log(inp)
@@ -119,6 +121,7 @@ const LoginRegisterPage = () => {
               <span>Forgot your <span className="forgot">password?</span></span>
               <button type='submit' >Login</button>
               {/* input fields end */}
+
             </form>
           </div>
           {/* sign in form section end*/}
