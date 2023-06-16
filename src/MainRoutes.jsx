@@ -36,12 +36,8 @@ const MainRoutes = createBrowserRouter([
             },
         ],
     },
-    // {
-    //     path: "/login",
-    //     element: <LoginRegisterPage />,
-    // },
     {
-        path : "/admin*",
+        path : "/admin/*",
         element : <Suspense fallback={ <h2>loading...</h2> }> <AdminRoutes/> </Suspense>
 
     }

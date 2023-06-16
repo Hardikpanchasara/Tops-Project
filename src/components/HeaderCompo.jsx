@@ -21,16 +21,16 @@ import { useCookies } from 'react-cookie';
 const HeaderCompo = () => {
     const [showBasic, setShowBasic] = useState(false);
 
-    const [cookies, setCookie] = useCookies([]);
+    const [cookies, setCookie, removeCookie] = useCookies([]);
     const navigate = useNavigate()
-    useEffect(() => {
-        if (cookies.role == 1) {
-            navigate("/admin")
-        }
-        if (cookies.role == 2) {
-            navigate("/")
-        }
-    })
+
+    const Logout = () => {
+        console.log("remove cookies")
+        Object.keys(cookies).forEach(cookieName => {
+            removeCookie(cookieName);
+        });
+        navigate("/login")
+    }
 
     const MenuItem = {
         "/": "Home",
@@ -92,9 +92,7 @@ const HeaderCompo = () => {
                         <MDBNavbarNav className='mr-auto mb-2 mb-lg-0'>
 
                             {Menudata}
-                            <MDBNavbarItem>
-                                {(cookies.userid == undefined) ? <NavLink className='nav-link' to="/login">Login</NavLink> : <NavLink className='nav-link' to="/logout">Logout</NavLink>}
-                            </MDBNavbarItem>
+
 
                             <MDBNavbarItem>
                                 <MDBDropdown>
@@ -109,10 +107,11 @@ const HeaderCompo = () => {
 
                         </MDBNavbarNav>
 
-                        <form className='d-flex input-group w-auto'>
-                            <input type='search' className='form-control' placeholder='Type query' aria-label='Search' />
-                            <MDBBtn color='primary'>Search</MDBBtn>
-                        </form>
+                                {cookies.role ?
+                                    <MDBBtn color='danger' className='d-flex align-items-center' onClick={Logout}><i className="fa-solid fa-right-from-bracket"></i> Logout</MDBBtn> :
+                                    <MDBBtn color='success'><NavLink className='nav-link text-white d-flex align-items-center p-0' to="/login">Login <i className="fa-solid fa-right-to-bracket"></i></NavLink> </MDBBtn>
+                                }
+                        
                     </MDBCollapse>
                 </MDBContainer>
             </MDBNavbar>

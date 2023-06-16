@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import HandleChangeHook from '../CustomHooks/HandleChangeHook'
@@ -11,36 +11,50 @@ const LoginRegisterPage = () => {
   const navigate = useNavigate()
   const [cookies, setCookies] = useCookies()
   const [loginMsg, setLoginMsg] = useState("")
-  console.log(cookies)
+  const [ErrorMsg, setErrorMsg] = useState(false)
 
-  const LoginSubmit = (event) => {
+  useEffect(() => {
+    if (cookies.role == 1) {
+      navigate("/admin")
+    }
+    if (cookies.role == 2) {
+      navigate("/")
+    }
+  }, [cookies.role, navigate])
+
+  const LoginSubmit = async (event) => {
     event.preventDefault()
     console.log(inp)
-    axios.get(`http://localhost:5000/users?email=${inp.email}&password=${inp.password}`)
-      .then(function (response) {
-        console.log("res = ", response);
-        if (response.status == 200) {
-          console.log("response status", response.status)
-          if (response.data.length > 0) {
-            setCookies('username', response.data[0].username);
-            setCookies('userid', response.data[0].id);
-            setCookies('role', response.data[0].role);
-            if (response.data[0].role == 1) {
-              navigate("/admin")
+    try {
+      await axios.get(`http://localhost:5000/users?email=${inp.email}&password=${inp.password}`)
+        .then(function (response) {
+          console.log("res = ", response);
+          if (response.status == 200) {
+            console.log("response status", response.status)
+            if (response.data.length > 0) {
+              setCookies('username', response.data[0].username);
+              setCookies('userid', response.data[0].id);
+              setCookies('role', response.data[0].role);
+              if (response.data[0].role == 1) {
+                navigate("/admin")
+              } else {
+                navigate("/")
+              }
             } else {
-              // navigate("/")
+              console.log("invalid user");
+              setLoginMsg("invalid user")
             }
           } else {
-            console.log("invalid user");
-            setLoginMsg("invalid user")
+            console.log("error while connecting to the server", response.status);
           }
-        } else {
-          console.log("error while connecting to the server", response.status);
-        }
-      })
-      .catch(function (error) {
-        console.log("err = ", error);
-      });
+        })
+        .catch((err) => {
+          console.log(err)
+          setErrorMsg(true)
+        });
+    } catch (error) {
+      console.log(error)
+    }
   }
 
 
@@ -80,70 +94,73 @@ const LoginRegisterPage = () => {
   return (
     <>
       <Wrapper>
-        <div className={`container ${rightPanel ? "right-panel-active" : ""}`} id="container">
-          <Link className='position-absolute z-index-up' to="/">
-            <i className='fa fa-home'></i>
-          </Link>
-          {/* sign Up form section start*/}
-          <div className="form sign_up">
-            <form onSubmit={RegisterSubmit}>
-              {/* heading */}
-              <h1>Create An Account</h1>
-              {/* social media icons */}
-              <div className="social-container">
-                <NavLink to=""><i className="fa-brands fa-google" /></NavLink>
-              </div>
-              <span>use email for registration</span>
-              {/* input fields start */}
-              <input className='required' type="text" placeholder="User Name" name='username' onChange={handleChange} />
-              {errors.usernameError ? <span>This field is Required</span> : <></>}
-              <input className='required' type="email" placeholder="Email" name='email' onChange={handleChange} />
-              {errors.emailError ? <span>This field is Required</span> : <></>}
-              <input className='required' type="password" placeholder="Password" name='password' onChange={handleChange} />
-              {errors.passwordError ? <span>This field is Required</span> : <></>}
-              <button>Create Account</button>
-              {/* input fields end */}
-            </form>
-          </div>
-          {/* sign Up form section end*/}
-          {/* sign in form section start*/}
-          <div className="form sign_in">
-            <form onSubmit={LoginSubmit}>
-              {/* heading */}
-              <h1>Login In</h1>
-              {/* social media icons */}
-              <div className="social-container">
-                <NavLink to=""><i className="fa-brands fa-google" /></NavLink>
-              </div>
-              <span>Login In with your Account</span>
-              {/* input fields start */}
-              <input type="email" placeholder="Email" name='email' onChange={handleChange} />
-              <input type="password" placeholder="Password" name='password' onChange={handleChange} />
-              <span>Forgot your <span className="forgot">password?</span></span>
-              <button type='submit' >Login</button>
-              {/* input fields end */}
+        {ErrorMsg ?
+          <>Error while connecting please try after some time</>
+          :
+          <div className={`container ${rightPanel ? "right-panel-active" : ""}`} id="container">
+            <Link className='position-absolute z-index-up' to="/">
+              <i className='fa fa-home'></i>
+            </Link>
+            {/* sign Up form section start*/}
+            <div className="form sign_up">
+              <form onSubmit={RegisterSubmit}>
+                {/* heading */}
+                <h1>Create An Account</h1>
+                {/* social media icons */}
+                <div className="social-container">
+                  <NavLink to=""><i className="fa-brands fa-google" /></NavLink>
+                </div>
+                <span>use email for registration</span>
+                {/* input fields start */}
+                <input className='required' type="text" placeholder="User Name" name='username' onChange={handleChange} />
+                {errors.usernameError ? <span>This field is Required</span> : <></>}
+                <input className='required' type="email" placeholder="Email" name='email' onChange={handleChange} />
+                {errors.emailError ? <span>This field is Required</span> : <></>}
+                <input className='required' type="password" placeholder="Password" name='password' onChange={handleChange} />
+                {errors.passwordError ? <span>This field is Required</span> : <></>}
+                <button>Create Account</button>
+                {/* input fields end */}
+              </form>
+            </div>
+            {/* sign Up form section end*/}
+            {/* sign in form section start*/}
+            <div className="form sign_in">
+              <form onSubmit={LoginSubmit}>
+                {/* heading */}
+                <h1>Login In</h1>
+                {/* social media icons */}
+                <div className="social-container">
+                  <NavLink to=""><i className="fa-brands fa-google" /></NavLink>
+                </div>
+                <span>Login In with your Account</span>
+                {/* input fields start */}
+                <input type="email" placeholder="Email" name='email' onChange={handleChange} />
+                <input type="password" placeholder="Password" name='password' onChange={handleChange} />
+                <span>Forgot your <span className="forgot">password?</span></span>
+                <button type='submit' >Login</button>
+                {/* input fields end */}
 
-            </form>
-          </div>
-          {/* sign in form section end*/}
-          {/* overlay section start*/}
-          <div className="overlay-container">
-            <div className="overlay">
-              <div className="overlay-pannel overlay-left">
-                <h1>Already have an account</h1>
-                <p>Please Login</p>
-                <button id="signIn" className="overBtn" onClick={SetLeftPanel} >SignIn</button>
-              </div>
-              <div className="overlay-pannel overlay-right">
-                <h1>Create Account</h1>
-                <p>Start Your Journey with Us</p>
-                <button id="signUp" className="overBtn" onClick={SetRightPanel}>Sign Up</button>
+              </form>
+            </div>
+            {/* sign in form section end*/}
+            {/* overlay section start*/}
+            <div className="overlay-container">
+              <div className="overlay">
+                <div className="overlay-pannel overlay-left">
+                  <h1>Already have an account</h1>
+                  <p>Please Login</p>
+                  <button id="signIn" className="overBtn" onClick={SetLeftPanel} >SignIn</button>
+                </div>
+                <div className="overlay-pannel overlay-right">
+                  <h1>Create Account</h1>
+                  <p>Start Your Journey with Us</p>
+                  <button id="signUp" className="overBtn" onClick={SetRightPanel}>Sign Up</button>
+                </div>
               </div>
             </div>
+            {/* overlay section start*/}
           </div>
-          {/* overlay section start*/}
-        </div>
-
+        }
       </Wrapper>
     </>
   )
